@@ -16,6 +16,7 @@ export const MentorInfo = ({ mentor }: { mentor: Mentor }): JSX.Element => {
           />
         </div>
         <div className="name">{mentor.name}</div>
+        {mentor.pronouns}
         {/*<div className="bio">{mentor.bio}</div>*/}
         {/* TODO: (required) View previous sessions as a student */}
       </div>

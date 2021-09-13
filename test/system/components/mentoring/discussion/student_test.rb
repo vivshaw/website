@@ -9,7 +9,7 @@ module Components
 
         test "shows student info" do
           mentor = create :user
-          student = create :user, name: "Apprentice", handle: "student", reputation: 1500, bio: "I love things"
+          student = create :user, name: "Apprentice", handle: "student", reputation: 1500, pronouns: "They/them/Their"
           ruby = create :track, title: "Ruby"
           running = create :concept_exercise, title: "Running", track: ruby
           solution = create :concept_solution, exercise: running, user: student
@@ -26,6 +26,7 @@ module Components
             assert_text student.name
             assert_text student.handle.to_s
             assert_text student.formatted_reputation
+            assert_text "They/them/Their"
             assert_css "img[src='#{student.avatar_url}']"\
               "[alt=\"Uploaded avatar of student\"]"
             assert_button "Add to favorites"

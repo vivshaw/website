@@ -56,6 +56,7 @@ module ReactComponents
           languages_spoken: mentor.languages_spoken,
           avatar_url: mentor.avatar_url,
           reputation: mentor.formatted_reputation,
+          pronouns: mentor.pronouns,
           num_discussions: num_discussions_with_mentor
         }
       end

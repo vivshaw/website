@@ -42,6 +42,7 @@ export type Mentor = {
   handle: string
   reputation: number
   numDiscussions: number
+  pronouns: string
 }
 
 export const MentoringSession = ({

@@ -20,6 +20,7 @@ class SerializeStudent
       languages_spoken: student.languages_spoken,
       avatar_url: student.avatar_url,
       reputation: student.formatted_reputation,
+      pronouns: student.pronouns,
       is_favorited: !!relationship&.favorited?,
       is_blocked: !!relationship&.blocked_by_mentor?,
       track_objectives: user_track&.objectives.to_s,

@@ -25,6 +25,7 @@ export const StudentInfo = ({
         </div>
         <div className="name">{student.name}</div>
         {/*<div className="bio">{student.bio}</div>*/}
+        {student.pronouns}
         <div className="options">
           {student.links ? (
             <StudentInfoActions student={student} setStudent={setStudent} />
