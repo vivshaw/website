@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { Student } from '../../types'
 import { Avatar, Reputation, GraphicalIcon } from '../../common'
 import { FavoritableStudent, FavoriteButton } from './FavoriteButton'
@@ -56,12 +56,19 @@ const StudentInfoActions = ({
   student: Student
   setStudent: (student: Student) => void
 }) => {
+  const handleFavorited = useCallback(
+    (newStudent) => {
+      setStudent({ ...student, isFavorited: newStudent.isFavorited })
+    },
+    [setStudent, student]
+  )
+
   return (
     <React.Fragment>
       {student.links.favorite ? (
         <FavoriteButton
           student={student as FavoritableStudent}
-          onSuccess={(student) => setStudent(student)}
+          onSuccess={handleFavorited}
         />
       ) : null}
     </React.Fragment>
