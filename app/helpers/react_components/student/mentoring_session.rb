@@ -1,7 +1,16 @@
 module ReactComponents
   module Student
     class MentoringSession < ReactComponent
-      initialize_with :solution, :request, :discussion
+      def initialize(solution, request, discussion, mentor: nil)
+        super()
+
+        @solution = solution
+        @request = request
+        @discussion = discussion
+        @mentor = mentor || default_mentor
+      end
+
+      attr_writer :mentor
 
       def to_s
         super(
@@ -13,7 +22,7 @@ module ReactComponents
             track: SerializeMentorSessionTrack.(track),
             exercise: SerializeMentorSessionExercise.(exercise),
             iterations: iterations,
-            mentor: mentor_data,
+            mentor: mentor,
             track_objectives: user_track&.objectives.to_s,
             out_of_date: solution.out_of_date?,
             videos: videos,
@@ -29,7 +38,15 @@ module ReactComponents
       end
 
       private
+      attr_reader :solution, :request, :discussion, :mentor
+
       delegate :track, :exercise, to: :solution
+
+      def default_mentor
+        mentor = discussion&.mentor
+
+        Mentor.new(mentor, ::Mentor::StudentRelationship.find_by(mentor: mentor, student: student))
+      end
 
       memoize
       def student
@@ -39,31 +56,6 @@ module ReactComponents
       memoize
       def user_track
         UserTrack.for(student, track)
-      end
-
-      memoize
-      def mentor
-        discussion&.mentor
-      end
-
-      def mentor_data
-        return nil unless mentor
-
-        {
-          name: mentor.name,
-          handle: mentor.handle,
-          bio: mentor.bio,
-          languages_spoken: mentor.languages_spoken,
-          avatar_url: mentor.avatar_url,
-          reputation: mentor.formatted_reputation,
-          pronouns: mentor.pronouns,
-          num_discussions: num_discussions_with_mentor
-        }
-      end
-
-      def num_discussions_with_mentor
-        mentor_relationship = Mentor::StudentRelationship.find_by(mentor: mentor, student: student)
-        mentor_relationship&.num_discussions.to_i
       end
 
       def videos

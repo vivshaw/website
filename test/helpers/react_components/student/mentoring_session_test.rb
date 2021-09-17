@@ -22,7 +22,12 @@ module ReactComponents::Student
       create :mentor_discussion_post, discussion: discussion, iteration: iteration_3, seen_by_student: true
       create :mentor_discussion_post, discussion: discussion, iteration: iteration_3, seen_by_student: false
 
-      component = ReactComponents::Student::MentoringSession.new(solution, mentor_request, discussion)
+      component = ReactComponents::Student::MentoringSession.new(
+        solution,
+        mentor_request,
+        discussion,
+        mentor: stub(as_json: {})
+      )
 
       assert_component component,
         "student-mentoring-session",
@@ -37,15 +42,7 @@ module ReactComponents::Student
             SerializeIteration.(iteration_2).merge(unread: false),
             SerializeIteration.(iteration_3).merge(unread: true)
           ],
-          mentor: {
-            name: mentor.name,
-            handle: mentor.handle,
-            bio: mentor.bio,
-            languages_spoken: mentor.languages_spoken,
-            avatar_url: mentor.avatar_url,
-            reputation: mentor.formatted_reputation,
-            num_discussions: 0
-          },
+          mentor: {},
           track_objectives: "",
           out_of_date: false,
           videos: [],
@@ -71,7 +68,12 @@ module ReactComponents::Student
 
       iteration = create :iteration, solution: solution
 
-      component = ReactComponents::Student::MentoringSession.new(solution, mentor_request, nil)
+      component = ReactComponents::Student::MentoringSession.new(
+        solution,
+        mentor_request,
+        nil,
+        mentor: stub(as_json: {})
+      )
 
       assert_component component,
         "student-mentoring-session",
@@ -84,7 +86,7 @@ module ReactComponents::Student
           iterations: [
             SerializeIteration.(iteration).merge(unread: false)
           ],
-          mentor: nil,
+          mentor: {},
           track_objectives: "",
           out_of_date: false,
           videos: [

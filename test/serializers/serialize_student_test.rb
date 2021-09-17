@@ -20,6 +20,7 @@ class SerializeStudentTest < ActiveSupport::TestCase
       track_objectives: "",
       num_total_discussions: 3,
       num_discussions_with_mentor: 5,
+      pronouns: student.pronouns,
       links: {
         block: Exercism::Routes.block_api_mentoring_student_path(student.handle),
         favorite: Exercism::Routes.favorite_api_mentoring_student_path(student.handle),
@@ -52,6 +53,7 @@ class SerializeStudentTest < ActiveSupport::TestCase
       track_objectives: "",
       num_total_discussions: 0,
       num_discussions_with_mentor: 0,
+      pronouns: student.pronouns,
       links: {
         block: Exercism::Routes.block_api_mentoring_student_path(student.handle),
         favorite: Exercism::Routes.favorite_api_mentoring_student_path(student.handle),

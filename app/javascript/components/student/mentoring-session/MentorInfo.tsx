@@ -10,7 +10,7 @@ export const MentorInfo = ({ mentor }: { mentor: Mentor }): JSX.Element => {
         <div className="handle-block">
           <div className="handle">{mentor.handle}</div>
           <Reputation
-            value={mentor.reputation.toString()}
+            value={mentor.formattedReputation.toString()}
             type="primary"
             size="small"
           />

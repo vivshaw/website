@@ -40,7 +40,7 @@ export type Mentor = {
   name: string
   bio: string
   handle: string
-  reputation: number
+  formattedReputation: number
   numDiscussions: number
   pronouns: string
 }
