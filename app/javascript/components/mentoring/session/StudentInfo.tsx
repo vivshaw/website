@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import { Student } from '../../types'
-import { Avatar, Reputation, GraphicalIcon } from '../../common'
+import { Avatar, Reputation, GraphicalIcon, Pronouns } from '../../common'
 import { FavoritableStudent, FavoriteButton } from './FavoriteButton'
 import { PreviousSessionsLink } from './PreviousSessionsLink'
 
@@ -25,7 +25,7 @@ export const StudentInfo = ({
         </div>
         <div className="name">{student.name}</div>
         {/*<div className="bio">{student.bio}</div>*/}
-        {student.pronouns}
+        <Pronouns handle={student.handle} pronouns={student.pronouns} />
         <div className="options">
           {student.links ? (
             <StudentInfoActions student={student} setStudent={setStudent} />
