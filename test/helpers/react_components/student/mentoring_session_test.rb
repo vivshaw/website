@@ -118,7 +118,7 @@ module ReactComponents::Student
           languages_spoken: mentor.languages_spoken,
           avatar_url: mentor.avatar_url,
           formatted_reputation: mentor.formatted_reputation,
-          pronouns: mentor.pronoun_parts,
+          pronouns: nil,
           num_discussions: num_discussions },
         MentoringSession::SerializeMentor.(mentor, relationship)
       )
@@ -134,6 +134,16 @@ module ReactComponents::Student
       data = MentoringSession::SerializeMentor.(mentor, relationship)
 
       assert_equal 0, data[:num_discussions]
+    end
+
+    test "pronouns" do
+      mentor = create :user, pronouns: "he/him/his"
+      data = MentoringSession::SerializeMentor.(mentor, nil)
+      assert_equal %w[he him his], data[:pronouns]
+
+      mentor = create :user, pronouns: nil
+      data = MentoringSession::SerializeMentor.(mentor, nil)
+      assert_nil data[:pronouns]
     end
   end
 end

@@ -99,7 +99,7 @@ module ReactComponents
 
         def user_hash
           build(mentor, USER_KEYS).merge(
-            pronouns: mentor.pronoun_parts
+            pronouns: mentor.pronouns.present? ? mentor.pronoun_parts : nil
           )
         end
 
