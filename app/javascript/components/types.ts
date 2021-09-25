@@ -44,7 +44,7 @@ export type Contribution = {
   iconUrl: string
   internalUrl?: string
   externalUrl?: string
-  earnedOn: string
+  createdAt: string
   track?: {
     title: string
     iconUrl: string
@@ -120,6 +120,7 @@ export type SolutionForStudent = {
   mentoringStatus: SolutionMentoringStatus
   hasNotifications: boolean
   numIterations: number
+  isOutOfDate: boolean
   updatedAt: string
   exercise: {
     slug: string
@@ -656,3 +657,8 @@ export type Notification = {
 }
 
 type NotificationImageType = 'icon' | 'avatar'
+
+export type MentoringSessionExemplarFile = {
+  filename: string
+  content: string
+}

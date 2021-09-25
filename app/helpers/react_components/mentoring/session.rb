@@ -31,8 +31,8 @@ module ReactComponents
               anonymous_mode: discussion&.anonymous_mode?
             ),
             mentor_solution: mentor_solution,
-            exemplar_solution: exercise.exemplar_files.values.first,
-            notes: notes,
+            exemplar_files: ExemplarFileList.new(exercise.exemplar_files),
+            notes: exercise.mentoring_notes_content,
             out_of_date: solution.out_of_date?,
             download_command: solution.mentor_download_cmd,
             scratchpad: {
@@ -60,7 +60,7 @@ module ReactComponents
         {
           mentor_dashboard: Exercism::Routes.mentoring_inbox_path,
           exercise: Exercism::Routes.track_exercise_path(track, exercise),
-          improve_notes: exercise.edit_mentoring_notes_url,
+          improve_notes: exercise.mentoring_notes_edit_url,
           mentoring_docs: Exercism::Routes.docs_section_path(:mentoring)
         }
       end
@@ -85,12 +85,6 @@ module ReactComponents
         ms ? SerializeCommunitySolution.(ms) : nil
       end
 
-      # TODO
-      def notes
-        markdown = Git::WebsiteCopy.new.mentor_notes_for(track.slug, exercise.slug).strip
-        Markdown::Parse.(markdown)
-      end
-
       memoize
       delegate :exercise, :track, to: :solution
 
@@ -101,6 +95,21 @@ module ReactComponents
       memoize
       def scratchpad
         ScratchpadPage.new(about: exercise)
+      end
+
+      class ExemplarFileList
+        extend Mandate::InitializerInjector
+
+        initialize_with :files
+
+        def as_json
+          files.map do |filename, content|
+            {
+              filename: filename.gsub(%r{^\.meta/}, ''),
+              content: content
+            }
+          end
+        end
       end
     end
   end
