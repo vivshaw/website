@@ -1,16 +1,7 @@
 module ReactComponents
   module Student
     class MentoringSession < ReactComponent
-      def initialize(solution, request, discussion, mentor: nil)
-        super()
-
-        @solution = solution
-        @request = request
-        @discussion = discussion
-        @mentor = mentor || default_mentor
-      end
-
-      attr_writer :mentor
+      initialize_with :solution, :request, :discussion
 
       def to_s
         super(
@@ -22,7 +13,7 @@ module ReactComponents
             track: SerializeMentorSessionTrack.(track),
             exercise: SerializeMentorSessionExercise.(exercise),
             iterations: iterations,
-            mentor: mentor,
+            mentor: SerializeMentor.(mentor, mentor_student_relationship),
             track_objectives: user_track&.objectives.to_s,
             out_of_date: solution.out_of_date?,
             videos: videos,
@@ -38,14 +29,20 @@ module ReactComponents
       end
 
       private
-      attr_reader :solution, :request, :discussion, :mentor
+      attr_reader :solution, :request, :discussion
 
       delegate :track, :exercise, to: :solution
 
-      def default_mentor
-        mentor = discussion&.mentor
+      memoize
+      def mentor_student_relationship
+        return unless mentor
 
-        Mentor.new(mentor, ::Mentor::StudentRelationship.find_by(mentor: mentor, student: student))
+        Mentor::StudentRelationship.find_by(mentor: mentor, student: student)
+      end
+
+      memoize
+      def mentor
+        discussion&.mentor
       end
 
       memoize
@@ -83,6 +80,43 @@ module ReactComponents
           unread = discussion ? counts.reject { |(_, seen), _| seen }.present? : false
 
           SerializeIteration.(iteration).merge(unread: unread)
+        end
+      end
+
+      class SerializeMentor
+        include Mandate
+
+        USER_KEYS = %i[name handle bio languages_spoken avatar_url formatted_reputation].freeze
+        RELATIONSHIP_KEYS = %i[num_discussions].freeze
+
+        initialize_with :mentor, :relationship
+
+        def call
+          return nil unless mentor
+
+          user_hash.merge(relationship_hash)
+        end
+
+        def user_hash
+          build(mentor, USER_KEYS).merge(
+            pronouns: mentor.pronoun_parts
+          )
+        end
+
+        def relationship_hash
+          build(relationship || NullRelationship.new, RELATIONSHIP_KEYS)
+        end
+
+        def build(object, keys)
+          keys.index_with do |key|
+            object.send(key)
+          end
+        end
+
+        class NullRelationship
+          def num_discussions
+            0
+          end
         end
       end
     end

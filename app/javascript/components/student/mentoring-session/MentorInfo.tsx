@@ -1,5 +1,5 @@
 import React from 'react'
-import { Avatar, Reputation } from '../../common'
+import { Avatar, Reputation, Pronouns } from '../../common'
 import { Mentor } from '../MentoringSession'
 
 export const MentorInfo = ({ mentor }: { mentor: Mentor }): JSX.Element => {
@@ -16,7 +16,7 @@ export const MentorInfo = ({ mentor }: { mentor: Mentor }): JSX.Element => {
           />
         </div>
         <div className="name">{mentor.name}</div>
-        {mentor.pronouns}
+        <Pronouns handle={mentor.handle} pronouns={mentor.pronouns} />
         {/*<div className="bio">{mentor.bio}</div>*/}
         {/* TODO: (required) View previous sessions as a student */}
       </div>
