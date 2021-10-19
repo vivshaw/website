@@ -375,6 +375,13 @@ module Git
       assert_equal(expected, exercise.example_files)
     end
 
+    test "test_files" do
+      exercise = Git::Exercise.new(:bob, "practice", "HEAD",
+        repo_url: TestHelpers.git_repo_url("track-with-exercises"))
+      expected = { "bob_test.rb" => "test content\n" }
+      assert_equal(expected, exercise.test_files)
+    end
+
     test "exemplar files" do
       exercise = Git::Exercise.new(:lasagna, "concept", "HEAD",
         repo_url: TestHelpers.git_repo_url("track-with-exercises"))
@@ -452,6 +459,20 @@ module Git
       exercise = Git::Exercise.new(:strings, "concept", "HEAD",
         repo_url: TestHelpers.git_repo_url("track-with-exercises"))
       assert_equal('exercises/concept/strings/.meta/config.json', exercise.config_absolute_filepath)
+    end
+
+    test "representer_version" do
+      exercise = Git::Exercise.new('space-age', "practice", "HEAD",
+        repo_url: TestHelpers.git_repo_url("track-with-exercises"))
+
+      assert_equal 2, exercise.representer_version
+    end
+
+    test "representer_version defaults to 1 if it doesn't exist" do
+      exercise = Git::Exercise.new('bob', "practice", "HEAD",
+        repo_url: TestHelpers.git_repo_url("track-with-exercises"))
+
+      assert_equal 1, exercise.representer_version
     end
   end
 end

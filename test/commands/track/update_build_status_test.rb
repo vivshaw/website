@@ -178,40 +178,40 @@ class Track::UpdateBuildStatusTest < ActiveSupport::TestCase
 
     Track::UpdateBuildStatus.(track)
 
-    assert_equal 3, track.build_status.syllabus.concepts.num_concepts
-    assert_equal 10, track.build_status.syllabus.concepts.num_concepts_target
-    expected_created = [
+    assert_equal 3, track.build_status.syllabus.concepts.active.size
+    assert_equal 10, track.build_status.syllabus.concepts.num_active_target
+    expected_active = [
       { slug: c_2.slug, name: c_2.name, num_students_learnt: 1 },
       { slug: c_4.slug, name: c_4.name, num_students_learnt: 3 },
       { slug: c_3.slug, name: c_3.name, num_students_learnt: 3 }
     ].map(&:to_obj)
-    assert_equal expected_created, track.build_status.syllabus.concepts.created
+    assert_equal expected_active, track.build_status.syllabus.concepts.active
   end
 
-  test "syllabus: concepts: num_concepts_target" do
+  test "syllabus: concepts: num_active_target" do
     track = create :track
     Track::UpdateBuildStatus.(track)
-    assert_equal 10, track.reload.build_status.syllabus.concepts.num_concepts_target
+    assert_equal 10, track.reload.build_status.syllabus.concepts.num_active_target
 
     create_list(:exercise_taught_concept, 10, exercise: create(:concept_exercise, track:))
     Track::UpdateBuildStatus.(track)
-    assert_equal 20, track.reload.build_status.syllabus.concepts.num_concepts_target
+    assert_equal 20, track.reload.build_status.syllabus.concepts.num_active_target
 
     create_list(:exercise_taught_concept, 10, exercise: create(:concept_exercise, track:))
     Track::UpdateBuildStatus.(track)
-    assert_equal 30, track.reload.build_status.syllabus.concepts.num_concepts_target
+    assert_equal 30, track.reload.build_status.syllabus.concepts.num_active_target
 
     create_list(:exercise_taught_concept, 10, exercise: create(:concept_exercise, track:))
     Track::UpdateBuildStatus.(track)
-    assert_equal 40, track.reload.build_status.syllabus.concepts.num_concepts_target
+    assert_equal 40, track.reload.build_status.syllabus.concepts.num_active_target
 
     create_list(:exercise_taught_concept, 10, exercise: create(:concept_exercise, track:))
     Track::UpdateBuildStatus.(track)
-    assert_equal 50, track.reload.build_status.syllabus.concepts.num_concepts_target
+    assert_equal 50, track.reload.build_status.syllabus.concepts.num_active_target
 
     create_list(:exercise_taught_concept, 26, exercise: create(:concept_exercise, track:))
     Track::UpdateBuildStatus.(track)
-    assert_equal 66, track.reload.build_status.syllabus.concepts.num_concepts_target
+    assert_equal 66, track.reload.build_status.syllabus.concepts.num_active_target
   end
 
   test "syllabus: concept_exercises" do
@@ -249,8 +249,8 @@ class Track::UpdateBuildStatusTest < ActiveSupport::TestCase
 
     Track::UpdateBuildStatus.(track)
 
-    assert_equal 2, track.build_status.syllabus.concept_exercises.num_exercises
-    expected_created = [
+    assert_equal 2, track.build_status.syllabus.concept_exercises.active.size
+    expected_active = [
       {
         slug: ce_2.slug,
         title: ce_2.title,
@@ -278,33 +278,57 @@ class Track::UpdateBuildStatusTest < ActiveSupport::TestCase
         links: { self: "/tracks/ruby/exercises/#{ce_3.slug}" }
       }
     ].map(&:to_obj)
-    assert_equal expected_created, track.build_status.syllabus.concept_exercises.created
+    assert_equal expected_active, track.build_status.syllabus.concept_exercises.active
   end
 
-  test "syllabus: concept_exercises: num_exercises_target" do
+  test "syllabus: concept_exercises: deprecated" do
+    track = create :track
+
+    deprecated_exercise = create :concept_exercise, track: track, status: :deprecated
+
+    Track::UpdateBuildStatus.(track)
+
+    assert_equal 1, track.build_status.syllabus.concept_exercises.deprecated.size
+    expected = {
+      slug: deprecated_exercise.slug,
+      title: deprecated_exercise.title,
+      icon_url: deprecated_exercise.icon_url,
+      num_started: 0,
+      num_submitted: 0,
+      num_submitted_average: 0.0,
+      num_completed: 0,
+      num_completed_percentage: 0,
+      num_mentoring_requests: 0,
+      num_mentoring_requests_percentage: 0.0,
+      links: { self: "/tracks/ruby/exercises/#{deprecated_exercise.slug}" }
+    }.to_obj
+    assert_includes track.build_status.syllabus.concept_exercises.deprecated, expected
+  end
+
+  test "syllabus: concept_exercises: num_active_target" do
     track = create :track
     Track::UpdateBuildStatus.(track)
-    assert_equal 10, track.reload.build_status.syllabus.concept_exercises.num_exercises_target
+    assert_equal 10, track.reload.build_status.syllabus.concept_exercises.num_active_target
 
     create_list(:concept_exercise, 10, track:)
     Track::UpdateBuildStatus.(track)
-    assert_equal 20, track.reload.build_status.syllabus.concept_exercises.num_exercises_target
+    assert_equal 20, track.reload.build_status.syllabus.concept_exercises.num_active_target
 
     create_list(:concept_exercise, 10, track:)
     Track::UpdateBuildStatus.(track)
-    assert_equal 30, track.reload.build_status.syllabus.concept_exercises.num_exercises_target
+    assert_equal 30, track.reload.build_status.syllabus.concept_exercises.num_active_target
 
     create_list(:concept_exercise, 10, track:)
     Track::UpdateBuildStatus.(track)
-    assert_equal 40, track.reload.build_status.syllabus.concept_exercises.num_exercises_target
+    assert_equal 40, track.reload.build_status.syllabus.concept_exercises.num_active_target
 
     create_list(:concept_exercise, 10, track:)
     Track::UpdateBuildStatus.(track)
-    assert_equal 50, track.reload.build_status.syllabus.concept_exercises.num_exercises_target
+    assert_equal 50, track.reload.build_status.syllabus.concept_exercises.num_active_target
 
     create_list(:concept_exercise, 26, track:)
     Track::UpdateBuildStatus.(track)
-    assert_equal 66, track.reload.build_status.syllabus.concept_exercises.num_exercises_target
+    assert_equal 66, track.reload.build_status.syllabus.concept_exercises.num_active_target
   end
 
   test "syllabus: health" do
@@ -312,11 +336,15 @@ class Track::UpdateBuildStatusTest < ActiveSupport::TestCase
     Track::UpdateBuildStatus.(track)
     assert_equal "missing", track.reload.build_status.syllabus.health
 
-    create_list(:concept_exercise, 9, track:)
+    create_list(:concept_exercise, 9, track:) do |exercise|
+      create :exercise_taught_concept, exercise:
+    end
     Track::UpdateBuildStatus.(track)
     assert_equal "needs_attention", track.reload.build_status.syllabus.health
 
-    create_list(:concept_exercise, 25, track:)
+    create_list(:concept_exercise, 25, track:) do |exercise|
+      create :exercise_taught_concept, exercise:
+    end
     Track::UpdateBuildStatus.(track)
     assert_equal "needs_attention", track.reload.build_status.syllabus.health
 
@@ -324,7 +352,9 @@ class Track::UpdateBuildStatusTest < ActiveSupport::TestCase
     Track::UpdateBuildStatus.(track)
     assert_equal "healthy", track.reload.build_status.syllabus.health
 
-    create_list(:concept_exercise, 20, track:)
+    create_list(:concept_exercise, 20, track:) do |exercise|
+      create :exercise_taught_concept, exercise:
+    end
     Track::UpdateBuildStatus.(track)
     assert_equal "exemplar", track.reload.build_status.syllabus.health
   end
@@ -357,8 +387,8 @@ class Track::UpdateBuildStatusTest < ActiveSupport::TestCase
 
     Track::UpdateBuildStatus.(track)
 
-    assert_equal 2, track.build_status.practice_exercises.num_exercises
-    expected_created = [
+    assert_equal 2, track.build_status.practice_exercises.active.size
+    expected_active = [
       {
         slug: pe_3.slug,
         title: pe_3.title,
@@ -386,7 +416,31 @@ class Track::UpdateBuildStatusTest < ActiveSupport::TestCase
         links: { self: "/tracks/ruby/exercises/#{pe_2.slug}" }
       }
     ].map(&:to_obj)
-    assert_equal expected_created, track.build_status.practice_exercises.created
+    assert_equal expected_active, track.build_status.practice_exercises.active
+  end
+
+  test "practice_exercises: deprecated" do
+    track = create :track
+
+    deprecated_exercise = create :practice_exercise, track: track, status: :deprecated
+
+    Track::UpdateBuildStatus.(track)
+
+    assert_equal 1, track.build_status.practice_exercises.deprecated.size
+    expected = {
+      slug: deprecated_exercise.slug,
+      title: deprecated_exercise.title,
+      icon_url: deprecated_exercise.icon_url,
+      num_started: 0,
+      num_submitted: 0,
+      num_submitted_average: 0.0,
+      num_completed: 0,
+      num_completed_percentage: 0,
+      num_mentoring_requests: 0,
+      num_mentoring_requests_percentage: 0.0,
+      links: { self: "/tracks/ruby/exercises/#{deprecated_exercise.slug}" }
+    }.to_obj
+    assert_includes track.build_status.practice_exercises.deprecated, expected
   end
 
   test "practice_exercises: unimplemented" do
@@ -394,7 +448,7 @@ class Track::UpdateBuildStatusTest < ActiveSupport::TestCase
 
     Track::UpdateBuildStatus.(track)
 
-    assert_equal 126, track.build_status.practice_exercises.num_unimplemented
+    assert_equal 126, track.build_status.practice_exercises.unimplemented.size
     expected = {
       slug: "zebra-puzzle",
       title: "Zebra Puzzle",
@@ -411,7 +465,7 @@ class Track::UpdateBuildStatusTest < ActiveSupport::TestCase
 
     Track::UpdateBuildStatus.(track)
 
-    assert_equal 2, track.build_status.practice_exercises.num_foregone
+    assert_equal 2, track.build_status.practice_exercises.foregone.size
     expected = {
       slug: "alphametics",
       title: "Alphametics",
@@ -423,32 +477,43 @@ class Track::UpdateBuildStatusTest < ActiveSupport::TestCase
     assert_includes track.build_status.practice_exercises.foregone, expected
   end
 
-  test "practice_exercises: num_exercises_target" do
+  test "practice_exercises: num_active_target" do
     track = create :track
     Track::UpdateBuildStatus.(track)
-    assert_equal 10, track.reload.build_status.practice_exercises.num_exercises_target
+    assert_equal 20, track.reload.build_status.practice_exercises.num_active_target
 
     create_list(:practice_exercise, 10, track:)
     Track::UpdateBuildStatus.(track)
-    assert_equal 20, track.reload.build_status.practice_exercises.num_exercises_target
+    assert_equal 20, track.reload.build_status.practice_exercises.num_active_target
 
     create_list(:practice_exercise, 10, track:)
     Track::UpdateBuildStatus.(track)
-    assert_equal 30, track.reload.build_status.practice_exercises.num_exercises_target
+    assert_equal 30, track.reload.build_status.practice_exercises.num_active_target
 
     create_list(:practice_exercise, 10, track:)
     Track::UpdateBuildStatus.(track)
-    assert_equal 40, track.reload.build_status.practice_exercises.num_exercises_target
+    assert_equal 40, track.reload.build_status.practice_exercises.num_active_target
 
     create_list(:practice_exercise, 10, track:)
     Track::UpdateBuildStatus.(track)
-    assert_equal 50, track.reload.build_status.practice_exercises.num_exercises_target
+    assert_equal 50, track.reload.build_status.practice_exercises.num_active_target
 
     create_list(:practice_exercise, 30, track:)
     Track::UpdateBuildStatus.(track)
 
-    num_unimplemented = Track::RetrieveUnimplementedPracticeExercises.(track.reload).size
-    assert_equal track.num_exercises + num_unimplemented, track.reload.build_status.practice_exercises.num_exercises_target
+    # Sanity check: concept exercises don't count
+    create_list(:concept_exercise, 3, track:)
+    Track::UpdateBuildStatus.(track)
+
+    # Sanity check: wip practice exercises don't count
+    create_list(:practice_exercise, 2, status: :wip, track:)
+    Track::UpdateBuildStatus.(track)
+
+    # Sanity check: deprecated practice exercises don't count
+    create_list(:practice_exercise, 2, status: :deprecated, track:)
+    Track::UpdateBuildStatus.(track)
+
+    assert_equal 195, track.reload.build_status.practice_exercises.num_active_target
   end
 
   test "practice_exercises: volunteers" do
@@ -531,15 +596,25 @@ class Track::UpdateBuildStatusTest < ActiveSupport::TestCase
     Track::UpdateBuildStatus.(track)
     assert_equal 1, track.reload.build_status.test_runner.version
 
-    create :submission_test_run, submission: (create :submission, track:), raw_results: { version: 1 }
+    create :submission_test_run, submission: (create :submission, track:), raw_results: { version: 1, status: 'pass' }
     Track::UpdateBuildStatus.(track)
     assert_equal 1, track.reload.build_status.test_runner.version
 
-    create :submission_test_run, submission: (create :submission, track:), raw_results: { version: 2 }
+    create :submission_test_run, submission: (create :submission, track:), raw_results: { version: 2, status: 'pass' }
     Track::UpdateBuildStatus.(track)
     assert_equal 2, track.reload.build_status.test_runner.version
 
-    create :submission_test_run, submission: (create :submission, track:), raw_results: { version: 3 }
+    create :submission_test_run, submission: (create :submission, track:), raw_results: { version: 3, status: 'pass' }
+    Track::UpdateBuildStatus.(track)
+    assert_equal 3, track.reload.build_status.test_runner.version
+
+    # Sanity check: ignore errored test runs
+    create :submission_test_run, :errored, submission: (create :submission, track:)
+    Track::UpdateBuildStatus.(track)
+    assert_equal 3, track.reload.build_status.test_runner.version
+
+    # Sanity check: ignore timed-out test runs
+    create :submission_test_run, :timed_out, submission: (create :submission, track:)
     Track::UpdateBuildStatus.(track)
     assert_equal 3, track.reload.build_status.test_runner.version
   end
@@ -560,26 +635,36 @@ class Track::UpdateBuildStatusTest < ActiveSupport::TestCase
     Track::UpdateBuildStatus.(track)
     assert_equal 2, track.reload.build_status.test_runner.version_target
 
-    create :submission_test_run, submission: (create :submission, track:), raw_results: { version: 1 }
+    create :submission_test_run, submission: (create :submission, track:), raw_results: { version: 1, status: 'pass' }
     Track::UpdateBuildStatus.(track)
     assert_equal 2, track.reload.build_status.test_runner.version_target
 
     track.update(course: false)
-    create :submission_test_run, submission: (create :submission, track:), raw_results: { version: 2 }
+    create :submission_test_run, submission: (create :submission, track:), raw_results: { version: 2, status: 'pass' }
     Track::UpdateBuildStatus.(track)
     assert_nil track.reload.build_status.test_runner.version_target
 
     track.update(course: true)
-    create :submission_test_run, submission: (create :submission, track:), raw_results: { version: 2 }
+    create :submission_test_run, submission: (create :submission, track:), raw_results: { version: 2, status: 'pass' }
     Track::UpdateBuildStatus.(track)
     assert_equal 3, track.reload.build_status.test_runner.version_target
 
     # Ignore submissions from other track
-    create :submission_test_run, submission: (create :submission, track: other_track), raw_results: { version: 1 }
+    create :submission_test_run, submission: (create :submission, track: other_track), raw_results: { version: 1, status: 'pass' }
     Track::UpdateBuildStatus.(track)
     assert_equal 3, track.reload.build_status.test_runner.version_target
 
-    create :submission_test_run, submission: (create :submission, track:), raw_results: { version: 3 }
+    # Sanity check: ignore errored test runs
+    create :submission_test_run, :errored, submission: (create :submission, track:)
+    Track::UpdateBuildStatus.(track)
+    assert_equal 3, track.reload.build_status.test_runner.version_target
+
+    # Sanity check: ignore timed-out test runs
+    create :submission_test_run, :timed_out, submission: (create :submission, track:)
+    Track::UpdateBuildStatus.(track)
+    assert_equal 3, track.reload.build_status.test_runner.version_target
+
+    create :submission_test_run, submission: (create :submission, track:), raw_results: { version: 3, status: 'pass' }
     Track::UpdateBuildStatus.(track)
     assert_nil track.reload.build_status.test_runner.version_target
   end
@@ -628,15 +713,15 @@ class Track::UpdateBuildStatusTest < ActiveSupport::TestCase
     assert_equal "exemplar", track.reload.build_status.test_runner.health
 
     track.update(course: true)
-    create :submission_test_run, submission: (create :submission, track:), raw_results: { version: 1 }
+    create :submission_test_run, submission: (create :submission, track:), raw_results: { version: 1, status: 'pass' }
     Track::UpdateBuildStatus.(track)
     assert_equal "needs_attention", track.reload.build_status.test_runner.health
 
-    create :submission_test_run, submission: (create :submission, track:), raw_results: { version: 2 }
+    create :submission_test_run, submission: (create :submission, track:), raw_results: { version: 2, status: 'pass' }
     Track::UpdateBuildStatus.(track)
     assert_equal "healthy", track.reload.build_status.test_runner.health
 
-    create :submission_test_run, submission: (create :submission, track:), raw_results: { version: 3 }
+    create :submission_test_run, submission: (create :submission, track:), raw_results: { version: 3, status: 'pass' }
     Track::UpdateBuildStatus.(track)
     assert_equal "exemplar", track.reload.build_status.test_runner.health
   end
@@ -823,7 +908,7 @@ class Track::UpdateBuildStatusTest < ActiveSupport::TestCase
 
     # test_runner_health: :exemplar
     track.update(has_representer: true)
-    create :submission_test_run, submission: submission, raw_results: { version: 3 }
+    create :submission_test_run, submission: submission, raw_results: { version: 3, status: 'pass' }
 
     # practice_exercises_health: :exemplar
     track.update(course: false)
@@ -834,7 +919,9 @@ class Track::UpdateBuildStatusTest < ActiveSupport::TestCase
 
     # syllabus_health: :exemplar
     track.update(course: true)
-    create_list(:concept_exercise, 50, track:)
+    create_list(:concept_exercise, 50, track:) do |exercise|
+      create :exercise_taught_concept, exercise:
+    end
 
     Track::UpdateBuildStatus.(track)
     assert_equal "exemplar", track.reload.build_status.health
