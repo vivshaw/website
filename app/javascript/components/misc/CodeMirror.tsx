@@ -1,4 +1,10 @@
+/// <reference path="../../../../node_modules/@codemirror/view/dist/index.d.ts"/>
+
 import React, { useState, useEffect, useRef } from 'react'
+import * as Y from 'yjs'
+// @ts-ignore
+import { yCollab, yUndoManagerKeymap } from 'y-codemirror.next'
+import { WebsocketProvider } from 'y-websocket'
 import { EditorView, keymap, KeyBinding } from '@codemirror/view'
 import { basicSetup } from '@codemirror/basic-setup'
 import { EditorState, Compartment, StateEffect } from '@codemirror/state'
@@ -79,11 +85,26 @@ export const CodeMirror = ({
       return
     }
 
+    const ydoc = new Y.Doc()
+    // const provider = new WebrtcProvider('codemirror6-demo-room', ydoc)
+    const provider = new WebsocketProvider(
+      'wss://demos.yjs.dev',
+      'codemirror.next-demo',
+      ydoc
+    )
+    const ytext = ydoc.getText(value)
+
+    provider.awareness.setLocalStateField('user', {
+      name: 'Anonymous ' + Math.floor(Math.random() * 100),
+      color: '#30bced',
+      colorLight: '#30bced33',
+    })
+
     const view = new EditorView({
       state: EditorState.create({
-        doc: value,
+        doc: ytext.toString(),
         extensions: [
-          keymapCompartment.of(keymap.of(commands)),
+          keymap.of([...yUndoManagerKeymap]),
           basicSetup,
           a11yTabBindingPanel(),
           tabCaptureCompartment.of(
@@ -97,6 +118,7 @@ export const CodeMirror = ({
               : [oneDarkTheme, oneDarkHighlightStyle]
           ),
           readonlyCompartment.of([EditorView.editable.of(!readonly)]),
+          yCollab(ytext, provider.awareness),
         ],
       }),
       parent: textarea,

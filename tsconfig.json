@@ -12,6 +12,8 @@
     "jsx": "react",
     "strict": true,
     "noEmit": true,
+    "isolatedModules": false,
+    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "types": ["app/javascript/declarations"]
