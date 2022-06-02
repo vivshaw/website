@@ -76,6 +76,7 @@ export default ({
   defaultSettings,
   autosave,
   panels,
+  help,
   track,
   exercise,
   links,
@@ -329,7 +330,7 @@ export default ({
             />
             <div className="options">
               <Header.ActionHints assignment={panels.instructions.assignment} />
-              <Header.ActionHelp helpHtml={track.helpHtml} />
+              <Header.ActionHelp helpHtml={help.html} />
               <Header.ActionSettings
                 settings={settings}
                 setSettings={setSettings}

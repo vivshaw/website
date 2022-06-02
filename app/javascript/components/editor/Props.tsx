@@ -50,6 +50,10 @@ type EditorPanels = {
   }
 }
 
+type Help = {
+  html: string
+}
+
 export type Props = {
   timeout?: number
   defaultSubmissions: Submission[]
@@ -57,7 +61,8 @@ export type Props = {
   defaultSettings: Partial<EditorSettings>
   autosave: AutosaveConfig
   panels: EditorPanels
-  track: Track & { helpHtml: string }
+  help: Help
+  track: Track
   exercise: Exercise
   links: Links
   features?: EditorFeatures

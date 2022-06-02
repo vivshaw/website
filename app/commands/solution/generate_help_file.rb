@@ -3,6 +3,7 @@ class Solution
     include Mandate
 
     initialize_with :solution
+    delegate :track, :exercise, to: :solution
 
     def call
       <<~TEXT.strip
@@ -18,36 +19,47 @@ class Solution
 
     private
     def tests
-      <<~TEXT.strip
-        ## #{I18n.t('exercises.documents.tests_header')}
+      header = I18n.t("exercises.documents.tests_header").strip
+      contents = Markdown::Render.(track.git.tests, :text).strip
 
-        #{Markdown::Render.(track.git.tests, :text).strip}
+      <<~TEXT.strip
+        ## #{header}
+
+        #{contents}
       TEXT
     end
 
     def submitting
-      <<~TEXT.strip
-        ## #{I18n.t('exercises.documents.submitting_solution_header')}
+      header = I18n.t("exercises.documents.submitting_solution_header").strip
+      contents = I18n.t("exercises.documents.submitting_solution",
+        solution_file_paths: exercise.git.solution_filepaths.join(" ")).strip
 
-        #{I18n.t('exercises.documents.submitting_solution', solution_file_paths: exercise.git.solution_filepaths.join(' '))}
+      <<~TEXT.strip
+        ## #{header}
+
+        #{contents}
       TEXT
     end
 
     def help
+      header = I18n.t("exercises.documents.help_header").strip
+      intro = I18n.t("exercises.documents.help_intro").strip
+
+      general_help = I18n.t('exercises.documents.help_pages', track_title: track.title, track_slug: track.slug)
+      submit_incomplete = I18n.t('exercises.documents.help_submit_incomplete')
+      track_help = Markdown::Render.(track.git.help, :text).strip
+
       <<~TEXT.strip
-        ## #{I18n.t('exercises.documents.help_header')}
+        ## #{header}
 
-        #{I18n.t('exercises.documents.help_intro')}
+        #{intro}
 
-        #{I18n.t('exercises.documents.help_pages', track_title: track.title, track_slug: track.slug)}
+        #{general_help}
 
-        #{I18n.t('exercises.documents.help_submit_incomplete')}
+        #{submit_incomplete}
 
-        #{Markdown::Render.(track.git.help, :text).strip}
+        #{track_help}
       TEXT
     end
-
-    def track = solution.track
-    def exercise = solution.exercise
   end
 end
