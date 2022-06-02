@@ -441,6 +441,46 @@ module Flows
           within(".iteration", text: "Iteration 1") { refute_text "Latest" }
         end
       end
+
+      test "editor files are shown for solutions submitted via CLI" do
+        user = create :user
+        track = create :track
+        create :user_track, user: user, track: track
+        exercise = create :practice_exercise, track: track, slug: 'isogram'
+        solution = create :practice_solution, exercise: exercise, user: user
+
+        submission = create :submission, :cli, solution: solution
+        create :iteration, idx: 1, solution: solution, submission: submission
+        create :submission_file, submission: submission, filename: "isogram.rb", content: "module Isogram"
+
+        use_capybara_host do
+          sign_in!(user)
+          visit track_exercise_iterations_url(track, exercise)
+
+          assert_text "isogram.rb"
+          assert_text "helper.rb"
+        end
+      end
+
+      test "editor files are shown for solutions submitted via API" do
+        user = create :user
+        track = create :track
+        create :user_track, user: user, track: track
+        exercise = create :practice_exercise, track: track, slug: 'isogram'
+        solution = create :practice_solution, exercise: exercise, user: user
+
+        submission = create :submission, :api, solution: solution
+        create :iteration, idx: 1, solution: solution, submission: submission
+        create :submission_file, submission: submission, filename: "isogram.rb", content: "module Isogram"
+
+        use_capybara_host do
+          sign_in!(user)
+          visit track_exercise_iterations_url(track, exercise)
+
+          assert_text "isogram.rb"
+          assert_text "helper.rb"
+        end
+      end
     end
   end
 end

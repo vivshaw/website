@@ -5,6 +5,14 @@ FactoryBot.define do
     submitted_via { "cli" }
     tests_status { :not_queued }
 
+    trait :cli do
+      submitted_via { "cli" }
+    end
+
+    trait :api do
+      submitted_via { "api" }
+    end
+
     transient do
       track do
         Track.find_by(slug: 'ruby') || create(:track, slug: 'ruby')
