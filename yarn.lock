@@ -1084,6 +1084,16 @@
     "@codemirror/view" "^0.19.0"
     "@lezer/common" "^0.15.0"
 
+"@codemirror/autocomplete@^6.3.0":
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/@codemirror/autocomplete/-/autocomplete-6.3.0.tgz#217e16bb6ce63374ec7b9d2a01d007ba53ff0aff"
+  integrity sha512-4jEvh3AjJZTDKazd10J6ZsCIqaYxDMCeua5ouQxY8hlFIml+nr7le0SgBhT3SIytFBmdzPK3AUhXGuW3T79nVg==
+  dependencies:
+    "@codemirror/language" "^6.0.0"
+    "@codemirror/state" "^6.0.0"
+    "@codemirror/view" "^6.0.0"
+    "@lezer/common" "^1.0.0"
+
 "@codemirror/basic-setup@^0.19.0":
   version "0.19.1"
   resolved "https://registry.yarnpkg.com/@codemirror/basic-setup/-/basic-setup-0.19.1.tgz#17b27d02f15c628eb62a85d01e3e1b1958933eb4"
@@ -1237,6 +1247,18 @@
     "@lezer/common" "^0.15.5"
     "@lezer/lr" "^0.15.0"
 
+"@codemirror/language@^6.0.0", "@codemirror/language@^6.2.1":
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/@codemirror/language/-/language-6.3.0.tgz#141c715e1fce5f6dcca3b1b984ed8f03f583dd5c"
+  integrity sha512-6jOE5DEt6sKD46SXhn3xPbBehn+l48ACcA6Uxs2k+E2YNH9XGF5WdGMTYr2DlggfK4h0QZBK6zEb5S7lkTriWA==
+  dependencies:
+    "@codemirror/state" "^6.0.0"
+    "@codemirror/view" "^6.0.0"
+    "@lezer/common" "^1.0.0"
+    "@lezer/highlight" "^1.0.0"
+    "@lezer/lr" "^1.0.0"
+    style-mod "^4.0.0"
+
 "@codemirror/legacy-modes@^0.19.0":
   version "0.19.0"
   resolved "https://registry.yarnpkg.com/@codemirror/legacy-modes/-/legacy-modes-0.19.0.tgz#df2f1023f79513d27eabb279b29d253f8b194b02"
@@ -1310,6 +1332,11 @@
   dependencies:
     "@codemirror/text" "^0.19.0"
 
+"@codemirror/state@^6.0.0", "@codemirror/state@^6.1.2":
+  version "6.1.2"
+  resolved "https://registry.yarnpkg.com/@codemirror/state/-/state-6.1.2.tgz#182d46eabcc17c95508984d6add5a5a641dcd517"
+  integrity sha512-Mxff85Hp5va+zuj+H748KbubXjrinX/k28lj43H14T2D0+4kuvEFIEIO7hCEcvBT8ubZyIelt9yGOjj2MWOEQA==
+
 "@codemirror/stream-parser@^0.19.0":
   version "0.19.5"
   resolved "https://registry.yarnpkg.com/@codemirror/stream-parser/-/stream-parser-0.19.5.tgz#775dc5116ffcc1162b047fc9e206bae7497682d5"
@@ -1352,6 +1379,15 @@
     "@codemirror/rangeset" "^0.19.5"
     "@codemirror/state" "^0.19.3"
     "@codemirror/text" "^0.19.0"
+    style-mod "^4.0.0"
+    w3c-keyname "^2.2.4"
+
+"@codemirror/view@^6.0.0", "@codemirror/view@^6.3.1":
+  version "6.4.1"
+  resolved "https://registry.yarnpkg.com/@codemirror/view/-/view-6.4.1.tgz#7526bd473b8e5e5f7bade834121864b8f7d2649f"
+  integrity sha512-QdBpD6E5HYx6YFXXhqwrRyQ83w7CxWZnchM4QpWBVkkmV7/oJT8N+yz2KAi2iRaLObc/aOf7C2RCQTO2yswF8A==
+  dependencies:
+    "@codemirror/state" "^6.0.0"
     style-mod "^4.0.0"
     w3c-keyname "^2.2.4"
 
@@ -1661,12 +1697,24 @@
   resolved "https://registry.yarnpkg.com/@lezer/common/-/common-0.15.11.tgz#965b5067036305f12e8a3efc344076850be1d3a8"
   integrity sha512-vv0nSdIaVCRcJ8rPuDdsrNVfBOYe/4Szr/LhF929XyDmBndLDuWiCCHooGlGlJfzELyO608AyDhVsuX/ZG36NA==
 
+"@lezer/common@^1.0.0":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@lezer/common/-/common-1.0.1.tgz#d014fda6d582c24336fadf2715e76f02f73c8908"
+  integrity sha512-8TR5++Q/F//tpDsLd5zkrvEX5xxeemafEaek7mUp7Y+bI8cKQXdSqhzTOBaOogETcMOVr0pT3BBPXp13477ciw==
+
 "@lezer/cpp@^0.15.0":
   version "0.15.2"
   resolved "https://registry.yarnpkg.com/@lezer/cpp/-/cpp-0.15.2.tgz#a08c4d62c64d4fc5325e4a6e4e8770bc90ff656b"
   integrity sha512-4Ve5LIRCE+VF+XE/cfSSOg6VuTOfh1pU2oxLKJu3XbyYzmSp9IjSZcW/UNcSRtMxM05MQ4/3AR5tUwp9PL4ExA==
   dependencies:
     "@lezer/lr" "^0.15.0"
+
+"@lezer/highlight@^1.0.0", "@lezer/highlight@^1.1.1":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@lezer/highlight/-/highlight-1.1.2.tgz#60cd6c2a0a2cf753b8a026b04feeb0ea8df326ea"
+  integrity sha512-CAun1WR1glxG9ZdOokTZwXbcwB7PXkIEyZRUMFBVwSrhTcogWq634/ByNImrkUnQhjju6xsIaOBIxvcRJtplXQ==
+  dependencies:
+    "@lezer/common" "^1.0.0"
 
 "@lezer/java@^0.15.0":
   version "0.15.0"
@@ -1688,6 +1736,13 @@
   integrity sha512-rmUukgyKSm6xzXO4cK5hkpX3+ZTHF+bHDkEuhofAVUTS3J23YytUxGWsrDwBVvGbhvxW87kheb2mRYHRwKacDQ==
   dependencies:
     "@lezer/common" "^0.15.0"
+
+"@lezer/lr@^1.0.0":
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/@lezer/lr/-/lr-1.2.4.tgz#380b8586c5578ca5d1187afd2284d51af103951e"
+  integrity sha512-L/52/oMJBFXXx8qBYF4UgktLP2geQ/qn5Fd8+5L/mqlLLCB9+qdKktFAtejd9FdFMaFx6lrP5rmLz4sN3Kplcg==
+  dependencies:
+    "@lezer/common" "^1.0.0"
 
 "@lezer/python@^0.15.0":
   version "0.15.0"
@@ -6306,6 +6361,18 @@ kleur@^3.0.3:
   resolved "https://registry.yarnpkg.com/kleur/-/kleur-3.0.3.tgz#a79c9ecc86ee1ce3fa6206d1216c501f147fc07e"
   integrity sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w==
 
+lang-bqn@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/lang-bqn/-/lang-bqn-0.0.2.tgz#97515977f8e8acb3d9a0b52513c10f62e2da843b"
+  integrity sha512-9Ml+Kw7C0RBMj4bc/KFRvdEh61EittZ6B0Z/uqdcCahjNlG2P1jMk7peu6lqDxa1Cz0rXJboGdRXp7Xc0uGStQ==
+  dependencies:
+    "@codemirror/autocomplete" "^6.3.0"
+    "@codemirror/language" "^6.2.1"
+    "@codemirror/state" "^6.1.2"
+    "@codemirror/view" "^6.3.1"
+    "@lezer/highlight" "^1.1.1"
+    lezer-bqn "0.0.1"
+
 lang-julia@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/lang-julia/-/lang-julia-0.1.0.tgz#7a7fa9262bd6d9146b4208cd5a8e1e448cb4ca73"
@@ -6357,6 +6424,14 @@ levn@~0.3.0:
   dependencies:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
+
+lezer-bqn@0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/lezer-bqn/-/lezer-bqn-0.0.1.tgz#bb7cf5961b26161171171a452994102cde13cd56"
+  integrity sha512-84RzP4KDusYZFC+yOf1UcbtZgAuM1fk/BjaHrKj32V2HusKZphW1p6zm0s6quN0Q+AwcXaCkBgdpU1TAh6W4rg==
+  dependencies:
+    "@lezer/common" "^1.0.0"
+    "@lezer/lr" "^1.0.0"
 
 lezer-julia@^0.1.0:
   version "0.1.1"

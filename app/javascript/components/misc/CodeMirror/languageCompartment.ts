@@ -241,6 +241,10 @@ export const loadLanguageCompartment = async (
       const { julia } = await import('lang-julia')
       return compartment.of(julia())
     }
+    case 'bqn': {
+      const { bqn } = await import('lang-bqn')
+      return compartment.of(bqn())
+    }
     default:
       return []
   }
