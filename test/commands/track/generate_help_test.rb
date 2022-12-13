@@ -13,6 +13,7 @@ class Track::GenerateHelpTest < ActiveSupport::TestCase
       Should those resources not suffice, check the following pages:
 
       - The [Ruby track's documentation](https://exercism.org/docs/tracks/ruby)
+      - The [Ruby track's programming category on the forum](https://forum.exercism.org/c/programming/ruby)
       - [Exercism's programming category on the forum](https://forum.exercism.org/c/programming/5)
       - The [Frequently Asked Questions](https://exercism.org/docs/using/faqs)
     EXPECTED
