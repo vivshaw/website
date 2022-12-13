@@ -8,6 +8,7 @@ export const buildEditor = build<Props>({
     defaultFiles: [{ filename: 'lasagna.rb', content: 'class Lasagna' }],
     defaultSettings: {},
     autosave: { saveInterval: 500000 },
+    help: { html: '' },
     panels: {
       instructions: {
         assignment: {
